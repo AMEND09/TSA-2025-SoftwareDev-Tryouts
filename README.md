@@ -1,4 +1,4 @@
-# Time Tracking System - TSA Software Development Submission
+# Time Tracking System: TSA Software Development Submission
 
 An accessible, WCAG 2.1 AA compliant time tracking system with Web Speech API integration and PocketBase backend.
 
@@ -149,7 +149,7 @@ This time tracking system is delivered as a **static web application hosted on G
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Frontend:** HTML5, CSS3, Vanilla JavaScript
 - **Backend:** PocketBase (hosted at tryout-backend.rizzed.mom)
