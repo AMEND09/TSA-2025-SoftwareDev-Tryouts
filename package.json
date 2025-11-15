@@ -1,0 +1,17 @@
+{
+  "name": "time-tracking-system",
+  "version": "1.0.0",
+  "description": "Accessible time tracking system with PocketBase backend",
+  "main": "server.js",
+  "scripts": {
+    "setup": "node scripts/setup-pocketbase.js",
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["time-tracking", "accessibility", "pocketbase"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "pocketbase": "^0.21.3"
+  }
+}

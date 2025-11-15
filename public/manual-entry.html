@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual Entry - Time Tracking System</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/accessibility.css">
+</head>
+<body>
+    <button id="accessibility-toggle" class="floating-btn" aria-label="Toggle accessibility panel" aria-expanded="false" aria-controls="accessibility-panel">
+        <span aria-hidden="true">♿</span>
+        <span class="sr-only">Accessibility Settings</span>
+    </button>
+
+    <div id="accessibility-panel" class="accessibility-panel" role="region" aria-label="Accessibility settings" hidden>
+        <h2>Accessibility Settings</h2>
+        <div class="accessibility-controls">
+            <div class="control-group">
+                <label for="screen-reader-toggle"><input type="checkbox" id="screen-reader-toggle" checked> Screen Reader Announcements</label>
+            </div>
+            <div class="control-group">
+                <label for="high-contrast-toggle"><input type="checkbox" id="high-contrast-toggle"> High Contrast Mode</label>
+            </div>
+            <div class="control-group">
+                <label for="text-size">Text Size:</label>
+                <select id="text-size">
+                    <option value="normal">Normal (100%)</option>
+                    <option value="large">Large (125%)</option>
+                    <option value="xlarge">Extra Large (150%)</option>
+                    <option value="xxlarge">Very Large (200%)</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="button-size">Button Size:</label>
+                <select id="button-size">
+                    <option value="normal">Normal</option>
+                    <option value="large">Large</option>
+                    <option value="xlarge">Extra Large</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="focus-indicator"><input type="checkbox" id="focus-indicator" checked> Enhanced Focus Indicators</label>
+            </div>
+        </div>
+    </div>
+
+    <div id="sr-announcements" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+
+    <nav class="main-nav" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <h1 class="nav-title">Time Tracker</h1>
+            <ul class="nav-menu">
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="timesheet.html">Timesheet</a></li>
+                <li><a href="manual-entry.html" aria-current="page">Manual Entry</a></li>
+                <li><a href="time-off.html">Time Off</a></li>
+                <li><button id="logout-btn" class="btn-link">Logout</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="page-container">
+        <h1 id="main-heading">Manual Time Entry</h1>
+        <p class="subtitle">Use this form to log hours when you couldn't clock in/out normally</p>
+
+        <section class="form-section" aria-labelledby="main-heading">
+            <form id="manual-entry-form" class="entry-form">
+                <div class="form-group">
+                    <label for="entry-date">Date:</label>
+                    <input type="date" 
+                           id="entry-date" 
+                           name="date" 
+                           required 
+                           aria-required="true"
+                           aria-describedby="entry-date-error">
+                    <span id="entry-date-error" class="error-message" role="alert"></span>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="start-time">Start Time:</label>
+                        <input type="time" 
+                               id="start-time" 
+                               name="startTime" 
+                               required 
+                               aria-required="true"
+                               aria-describedby="start-time-error">
+                        <span id="start-time-error" class="error-message" role="alert"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="end-time">End Time:</label>
+                        <input type="time" 
+                               id="end-time" 
+                               name="endTime" 
+                               required 
+                               aria-required="true"
+                               aria-describedby="end-time-error">
+                        <span id="end-time-error" class="error-message" role="alert"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="break-duration">Break Duration (minutes):</label>
+                        <input type="number" 
+                               id="break-duration" 
+                               name="breakDuration" 
+                               min="0" 
+                               value="0"
+                               aria-describedby="break-duration-help">
+                        <span id="break-duration-help" class="help-text">Total break time in minutes</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category">Work Category:</label>
+                        <select id="category" name="category">
+                            <option value="">Select category</option>
+                            <option value="regular">Regular Work</option>
+                            <option value="project">Project Work</option>
+                            <option value="meeting">Meeting</option>
+                            <option value="training">Training</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">Notes (optional):</label>
+                    <textarea id="notes" 
+                              name="notes" 
+                              rows="4"
+                              aria-describedby="notes-help"></textarea>
+                    <span id="notes-help" class="help-text">Add any relevant details about this time entry</span>
+                </div>
+
+                <div class="calculated-hours" role="status" aria-live="polite">
+                    <strong>Calculated Total Hours: <span id="calculated-hours">0.00</span></strong>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Submit Time Entry</button>
+                    <button type="reset" class="btn btn-secondary">Clear Form</button>
+                </div>
+
+                <div id="form-message" class="form-message" role="alert" aria-live="assertive"></div>
+            </form>
+        </section>
+    </main>
+
+    <script src="js/pocketbase-client.js"></script>
+    <script src="js/accessibility.js"></script>
+    <script src="js/manual-entry.js"></script>
+</body>
+</html>

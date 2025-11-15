@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timesheet - Time Tracking System</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/accessibility.css">
+</head>
+<body>
+    <!-- Accessibility Controls (same as dashboard) -->
+    <button id="accessibility-toggle" class="floating-btn" aria-label="Toggle accessibility panel" aria-expanded="false" aria-controls="accessibility-panel">
+        <span aria-hidden="true">♿</span>
+        <span class="sr-only">Accessibility Settings</span>
+    </button>
+
+    <div id="accessibility-panel" class="accessibility-panel" role="region" aria-label="Accessibility settings" hidden>
+        <h2>Accessibility Settings</h2>
+        <div class="accessibility-controls">
+            <div class="control-group">
+                <label for="screen-reader-toggle"><input type="checkbox" id="screen-reader-toggle" checked> Screen Reader Announcements</label>
+            </div>
+            <div class="control-group">
+                <label for="high-contrast-toggle"><input type="checkbox" id="high-contrast-toggle"> High Contrast Mode</label>
+            </div>
+            <div class="control-group">
+                <label for="text-size">Text Size:</label>
+                <select id="text-size">
+                    <option value="normal">Normal (100%)</option>
+                    <option value="large">Large (125%)</option>
+                    <option value="xlarge">Extra Large (150%)</option>
+                    <option value="xxlarge">Very Large (200%)</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="button-size">Button Size:</label>
+                <select id="button-size">
+                    <option value="normal">Normal</option>
+                    <option value="large">Large</option>
+                    <option value="xlarge">Extra Large</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="focus-indicator"><input type="checkbox" id="focus-indicator" checked> Enhanced Focus Indicators</label>
+            </div>
+        </div>
+    </div>
+
+    <div id="sr-announcements" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- Navigation -->
+    <nav class="main-nav" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <h1 class="nav-title">Time Tracker</h1>
+            <ul class="nav-menu">
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="timesheet.html" aria-current="page">Timesheet</a></li>
+                <li><a href="manual-entry.html">Manual Entry</a></li>
+                <li><a href="time-off.html">Time Off</a></li>
+                <li><button id="logout-btn" class="btn-link">Logout</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="page-container">
+        <h1 id="main-heading">Timesheet History</h1>
+
+        <!-- Filters -->
+        <section class="filters-section" aria-labelledby="filters-heading">
+            <h2 id="filters-heading" class="sr-only">Filter options</h2>
+            <div class="filters-container">
+                <div class="filter-group">
+                    <label for="period-filter">Pay Period:</label>
+                    <select id="period-filter" aria-label="Select pay period">
+                        <option value="current">Current Period</option>
+                        <option value="last">Last Period</option>
+                        <option value="custom">Custom Date Range</option>
+                    </select>
+                </div>
+
+                <div class="filter-group" id="date-range-group" hidden>
+                    <label for="start-date">Start Date:</label>
+                    <input type="date" id="start-date" aria-label="Start date">
+                    
+                    <label for="end-date">End Date:</label>
+                    <input type="date" id="end-date" aria-label="End date">
+                </div>
+
+                <button id="apply-filter-btn" class="btn btn-secondary">Apply Filter</button>
+            </div>
+        </section>
+
+        <!-- Summary -->
+        <section class="period-summary" aria-labelledby="period-summary-heading">
+            <h2 id="period-summary-heading">Period Summary</h2>
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <h3>Total Hours</h3>
+                    <p class="summary-value" id="period-total-hours">0.0</p>
+                </div>
+                <div class="summary-card">
+                    <h3>Regular Hours</h3>
+                    <p class="summary-value" id="period-regular-hours">0.0</p>
+                </div>
+                <div class="summary-card">
+                    <h3>Overtime Hours</h3>
+                    <p class="summary-value" id="period-overtime-hours">0.0</p>
+                </div>
+                <div class="summary-card">
+                    <h3>Break Time</h3>
+                    <p class="summary-value" id="period-break-hours">0.0</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Timesheet Table -->
+        <section class="timesheet-section" aria-labelledby="timesheet-heading">
+            <h2 id="timesheet-heading">Time Entries</h2>
+            <div class="table-container">
+                <table class="data-table" role="table" aria-labelledby="timesheet-heading">
+                    <thead>
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Clock In</th>
+                            <th scope="col">Clock Out</th>
+                            <th scope="col">Break Time</th>
+                            <th scope="col">Total Hours</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="timesheet-entries">
+                        <tr>
+                            <td colspan="8" class="no-data">Loading timesheet data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Edit Request Modal -->
+        <div id="edit-modal" class="modal" role="dialog" aria-labelledby="edit-modal-title" aria-modal="true" hidden tabindex="-1">
+            <div class="modal-content">
+                <h2 id="edit-modal-title">Request Time Entry Correction</h2>
+                <form id="edit-request-form">
+                    <input type="hidden" id="edit-entry-id">
+                    
+                    <div class="form-group">
+                        <label for="edit-reason">Reason for Correction:</label>
+                        <textarea id="edit-reason" 
+                                  name="reason" 
+                                  required 
+                                  rows="4"
+                                  aria-required="true"
+                                  aria-describedby="edit-reason-help"></textarea>
+                        <span id="edit-reason-help" class="help-text">Please explain why this correction is needed</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-clock-in">Corrected Clock In:</label>
+                        <input type="datetime-local" id="edit-clock-in" name="clockIn">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-clock-out">Corrected Clock Out:</label>
+                        <input type="datetime-local" id="edit-clock-out" name="clockOut">
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="submit" class="btn btn-primary">Submit Request</button>
+                        <button type="button" class="btn btn-secondary" id="cancel-edit-btn">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/pocketbase-client.js"></script>
+    <script src="js/accessibility.js"></script>
+    <script src="js/timesheet.js"></script>
+</body>
+</html>
